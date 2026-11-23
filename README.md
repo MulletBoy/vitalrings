@@ -25,7 +25,8 @@
 Heart, vitals and fitness for Home Assistant, as rings you want to close. VitalRings takes the
 health data your watch already sends to Home Assistant and scores six readings from 0 to 100
 against published benchmarks, so a full ring is always good news. It is part of the
-[Rings family](#the-rings-family), alongside [SleepRings](https://github.com/MulletBoy/sleeprings).
+[Rings family](#the-rings-family), alongside [SleepRings](https://github.com/MulletBoy/sleeprings)
+and [ActiveRings](https://github.com/MulletBoy/activerings).
 
 VitalRings is one install: a custom integration that works out the figures, and a card that the
 integration loads into your dashboards by itself.
@@ -58,6 +59,7 @@ a dashboard. Each works on its own; together they cover your night and your day.
 |---|---|---|
 | <img src="https://raw.githubusercontent.com/MulletBoy/sleeprings/main/custom_components/sleep_rings/brand/icon.png" alt="" width="44"> | **[SleepRings](https://github.com/MulletBoy/sleeprings)** | Your night: an Apple-Watch-style sleep score from duration, bedtime and interruptions, with sleep stages, sleeping heart rate and a 30-night history. |
 | <img src="custom_components/vital_rings/brand/icon.png" alt="" width="44"> | **VitalRings** (you are here) | Your body: heart, recovery and breathing, sleeping heart rate, blood oxygen and VO2 max, with heart rate, VO2 max and weight charts. |
+| <img src="https://raw.githubusercontent.com/MulletBoy/activerings/main/custom_components/active_rings/brand/icon.png" alt="" width="44"> | **[ActiveRings](https://github.com/MulletBoy/activerings)** | Your movement: steps, exercise and active energy today, and active minutes, active days and your focus activity over the last seven days, with steps and exercise charts and your workouts. |
 
 More may follow.
 
