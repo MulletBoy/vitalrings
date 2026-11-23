@@ -15,6 +15,7 @@
 
 <p align="center">
   <a href="#install">Install</a> ·
+  <a href="#the-rings-family">The Rings family</a> ·
   <a href="#the-card">The card</a> ·
   <a href="#how-the-rings-are-scored">Scoring</a> ·
   <a href="#entities">Entities</a> ·
@@ -23,8 +24,8 @@
 
 Heart, vitals and fitness for Home Assistant, as rings you want to close. VitalRings takes the
 health data your watch already sends to Home Assistant and scores six readings from 0 to 100
-against published benchmarks, so a full ring is always good news. A sister project to
-[SleepRings](https://github.com/MulletBoy/sleeprings).
+against published benchmarks, so a full ring is always good news. It is part of the
+[Rings family](#the-rings-family), alongside [SleepRings](https://github.com/MulletBoy/sleeprings).
 
 VitalRings is one install: a custom integration that works out the figures, and a card that the
 integration loads into your dashboards by itself.
@@ -46,6 +47,19 @@ Three looks, and every colour can be changed:
 
 > VitalRings is not a medical device and gives no medical advice. The scores are a guide built
 > from general reference ranges; they do not know your medical history.
+
+## The Rings family
+
+VitalRings is one of a family of Home Assistant apps that turn the health data from your watch
+into rings you want to close. They share one look, install the same way and sit side by side on
+a dashboard. Each works on its own; together they cover your night and your day.
+
+| | App | What it scores |
+|---|---|---|
+| <img src="https://raw.githubusercontent.com/MulletBoy/sleeprings/main/custom_components/sleep_rings/brand/icon.png" alt="" width="44"> | **[SleepRings](https://github.com/MulletBoy/sleeprings)** | Your night: an Apple-Watch-style sleep score from duration, bedtime and interruptions, with sleep stages, sleeping heart rate and a 30-night history. |
+| <img src="custom_components/vital_rings/brand/icon.png" alt="" width="44"> | **VitalRings** (you are here) | Your body: heart, recovery and breathing, sleeping heart rate, blood oxygen and VO2 max, with heart rate, VO2 max and weight charts. |
+
+More may follow.
 
 ## What it shows
 
@@ -88,6 +102,14 @@ Three looks, and every colour can be changed:
 
 Manual install: copy `custom_components/vital_rings` into your `config/custom_components` folder
 and restart.
+
+## What's new
+
+| Version | In short |
+|---|---|
+| **1.0.0** | First release: six rings scored against published benchmarks in two sets (Vitals and Fitness) with an explanation on every ring, real sleeping and awake heart rate averages, the heart rate, VO2 max and weight charts, nine sensors, and the card in three presets. |
+
+Full notes for every version are on the [releases page](https://github.com/MulletBoy/vitalrings/releases).
 
 ## Entities
 

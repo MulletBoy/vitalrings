@@ -35,7 +35,7 @@ import {
   type VitalRingsCardConfig,
 } from "./types";
 
-export const CARD_VERSION = "0.1.0";
+export const CARD_VERSION = "1.0.0";
 const CARD_TAG = "vital-rings-card";
 
 const HOUR = 3_600_000;

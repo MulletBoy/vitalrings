@@ -1917,7 +1917,7 @@ var Be = te`
       transition: none;
     }
   }
-`, gt, Fe = "0.1.0", q = "vital-rings-card", x = 36e5, D = 24 * x, Ve = [{
+`, gt, Fe = "1.0.0", q = "vital-rings-card", x = 36e5, D = 24 * x, Ve = [{
   key: "vitals",
   label: "Vitals",
   score: "vitals_score",
