@@ -30,6 +30,8 @@ from .const import (
     CONF_SEX,
     CONF_SOURCE,
     CONF_SOURCE_ENTRY,
+    DAY_AVERAGE_METRICS,
+    DAY_AVERAGE_WINDOW,
     HEART_RATE,
     HEART_RATE_VARIABILITY,
     HEIGHT,
@@ -245,6 +247,17 @@ class VitalRingsManager:
                 }
             )
 
+        # The last day's average of the spot readings, which the rings are scored on.
+        for metric, hours_with_readings in await self._async_day_readings(now):
+            if hours_with_readings:
+                means = [hour.mean for hour in hours_with_readings]
+                metrics.setdefault(metric, {}).update(
+                    {
+                        "average_24h": _round(sum(means) / len(means), 2),
+                        "readings_24h": len(means),
+                    }
+                )
+
         # Heart rate asleep, awake today and awake on the day before.
         sleep_state = self._state(LAST_SLEEP)
         sleep = self.source.sleep_window(sleep_state) if sleep_state else None
@@ -283,11 +296,19 @@ class VitalRingsManager:
             found: list[float] = []
             for metric in ring_metrics:
                 values = metrics.get(metric)
-                result = score(metric, values.get("value") if values else None, age, sex)
-                if values is None or result is None:
+                if values is None:
+                    continue
+                # One spot reading can be far off: where there is an average of
+                # the last day, that is what gets scored.
+                on_average = values.get("average_24h") is not None
+                scored = values["average_24h"] if on_average else values.get("value")
+                result = score(metric, scored, age, sex)
+                if result is None:
                     continue
                 found.append(result.score)
                 values["score"] = round(result.score)
+                values["scored"] = scored
+                values["basis"] = "day" if on_average else "latest"
                 values["full"] = {
                     "direction": result.direction,
                     "low": result.full_low,
@@ -376,6 +397,31 @@ class VitalRingsManager:
         start = max(start, now - timedelta(days=4))
         rows = await self._async_statistics({statistic_id}, start, now + timedelta(hours=1), "hour")
         return samples(rows.get(statistic_id, []), LIMITS[HEART_RATE])
+
+    async def _async_day_readings(self, now: datetime) -> list[tuple[str, list[Sample]]]:
+        """The hours of the last day that have readings, for each spot-reading metric."""
+        ids = {
+            metric: statistic_id
+            for metric in DAY_AVERAGE_METRICS
+            if (statistic_id := self.source.statistic_id(self.source_entry_id, metric))
+        }
+        if not ids:
+            return []
+        start = now - DAY_AVERAGE_WINDOW
+        rows = await self._async_statistics(
+            set(ids.values()), start, now + timedelta(hours=1), "hour"
+        )
+        return [
+            (
+                metric,
+                [
+                    hour
+                    for hour in samples(rows.get(statistic_id, []), LIMITS[metric])
+                    if hour.end > start.timestamp()
+                ],
+            )
+            for metric, statistic_id in ids.items()
+        ]
 
     async def _async_daily(self, now: datetime) -> list[tuple[str, list[Sample]]]:
         ids = {

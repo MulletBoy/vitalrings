@@ -5,6 +5,11 @@ healthy adult. The benchmarks are reference ranges from the literature turned
 into straight lines, which is a simplification: they are a guide, not a
 medical judgement.
 
+Resting heart rate, heart rate variability, respiratory rate and blood oxygen
+are scored on the average of the last 24 hours where there is one (the caller
+works it out): a watch takes them as spot readings, and one odd reading would
+otherwise empty a ring.
+
 - Resting heart rate: 60-100 bpm is the normal adult range (American Heart
   Association); well-trained people rest at 40-60. Full marks at 50 or lower,
   none at 100.

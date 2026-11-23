@@ -347,6 +347,11 @@
       vo2_max: [line(vo2Points, 44.2), { direction: "high", low: null, high: vo2Row[6] }],
     };
     for (const [key, [value, full]] of Object.entries(scored)) Object.assign(metrics[key], { score: Math.round(value), full });
+    // Four rings are scored on the last day's average; the latest spot reading can differ.
+    const dayAveraged = { resting_heart_rate: [s.resting, 1], heart_rate_variability: [s.hrv, -9], oxygen_saturation: [s.oxygen, -2], respiratory_rate: [s.respiratory, 0.3] };
+    for (const [key, [average, drift]] of Object.entries(dayAveraged)) {
+      Object.assign(metrics[key], { scored: average, average_24h: average, readings_24h: key === "resting_heart_rate" ? 1 : 9, basis: "day", value: round(average + drift) });
+    }
     metrics.vo2_max.percentile = Math.round(line(vo2Points.slice(1, 7).concat([[55.6, 95]]), 44.2));
     const mean = (keys) => Math.round(keys.reduce((sum, key) => sum + scored[key][0], 0) / keys.length);
     metrics.vitals_score = { value: mean(["resting_heart_rate", "heart_rate_variability", "respiratory_rate"]), rings: 3 };

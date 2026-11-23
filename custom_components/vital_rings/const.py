@@ -61,6 +61,16 @@ BASELINE_DAYS = {
     WEIGHT: 30,
 }
 
+# Rings scored on the average of the last day instead of the latest reading:
+# a watch takes these as spot readings, and one odd reading says little.
+DAY_AVERAGE_METRICS = (
+    RESTING_HEART_RATE,
+    HEART_RATE_VARIABILITY,
+    OXYGEN_SATURATION,
+    RESPIRATORY_RATE,
+)
+DAY_AVERAGE_WINDOW = timedelta(hours=24)
+
 # Values outside these are measuring errors or a wrong unit, and are ignored.
 LIMITS: dict[str, tuple[float, float]] = {
     HEART_RATE: (20, 250),

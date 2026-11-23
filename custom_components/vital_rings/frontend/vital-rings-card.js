@@ -32,7 +32,7 @@ var j = globalThis, ot = j.ShadowRoot && (j.ShadyCSS === void 0 || j.ShadyCSS.na
   let r = "";
   for (const s of e.cssRules) r += s.cssText;
   return Qt(r);
-})(t) : t, { is: re, defineProperty: se, getOwnPropertyDescriptor: ie, getOwnPropertyNames: ae, getOwnPropertySymbols: ne, getPrototypeOf: oe } = Object, G = globalThis, bt = G.trustedTypes, le = bt ? bt.emptyScript : "", he = G.reactiveElementPolyfillSupport, L = (t, e) => t, st = {
+})(t) : t, { is: re, defineProperty: se, getOwnPropertyDescriptor: ie, getOwnPropertyNames: ae, getOwnPropertySymbols: ne, getPrototypeOf: oe } = Object, q = globalThis, bt = q.trustedTypes, le = bt ? bt.emptyScript : "", he = q.reactiveElementPolyfillSupport, L = (t, e) => t, st = {
   toAttribute(t, e) {
     switch (e) {
       case Boolean:
@@ -71,7 +71,7 @@ var j = globalThis, ot = j.ShadowRoot && (j.ShadyCSS === void 0 || j.ShadyCSS.na
   useDefault: !1,
   hasChanged: Ut
 };
-Symbol.metadata ??= /* @__PURE__ */ Symbol("metadata"), G.litPropertyMetadata ??= /* @__PURE__ */ new WeakMap();
+Symbol.metadata ??= /* @__PURE__ */ Symbol("metadata"), q.litPropertyMetadata ??= /* @__PURE__ */ new WeakMap();
 var T = class extends HTMLElement {
   static addInitializer(t) {
     this._$Ei(), (this.l ??= []).push(t);
@@ -261,7 +261,7 @@ var T = class extends HTMLElement {
   firstUpdated(t) {
   }
 };
-T.elementStyles = [], T.shadowRootOptions = { mode: "open" }, T[L("elementProperties")] = /* @__PURE__ */ new Map(), T[L("finalized")] = /* @__PURE__ */ new Map(), he?.({ ReactiveElement: T }), (G.reactiveElementVersions ??= []).push("2.1.2");
+T.elementStyles = [], T.shadowRootOptions = { mode: "open" }, T[L("elementProperties")] = /* @__PURE__ */ new Map(), T[L("finalized")] = /* @__PURE__ */ new Map(), he?.({ ReactiveElement: T }), (q.reactiveElementVersions ??= []).push("2.1.2");
 var ht = globalThis, $t = (t) => t, W = ht.trustedTypes, wt = W ? W.createPolicy("lit-html", { createHTML: (t) => t }) : void 0, Lt = "$lit$", k = `lit$${Math.random().toFixed(9).slice(2)}$`, Bt = "?" + k, ce = `<${Bt}>`, E = document, B = () => E.createComment(""), F = (t) => t === null || typeof t != "object" && typeof t != "function", ct = Array.isArray, de = (t) => ct(t) || typeof t?.[Symbol.iterator] == "function", Q = `[ 	
 \f\r]`, z = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, xt = /-->/g, kt = />/g, A = RegExp(`>|${Q}(?:([^\\s"'>=/]+)(${Q}*=${Q}*(?:[^ 	
 \f\r"'\`<>=]|("|')|))|$)`, "g"), At = /'/g, St = /"/g, Ft = /^(?:script|style|textarea|title)$/i, dt = (t) => (e, ...r) => ({
@@ -278,8 +278,8 @@ var ue = (t, e) => {
   let i, a = e === 2 ? "<svg>" : e === 3 ? "<math>" : "", o = z;
   for (let n = 0; n < r; n++) {
     const h = t[n];
-    let p, g, u = -1, m = 0;
-    for (; m < h.length && (o.lastIndex = m, g = o.exec(h), g !== null); ) m = o.lastIndex, o === z ? g[1] === "!--" ? o = xt : g[1] !== void 0 ? o = kt : g[2] !== void 0 ? (Ft.test(g[2]) && (i = RegExp("</" + g[2], "g")), o = A) : g[3] !== void 0 && (o = A) : o === A ? g[0] === ">" ? (o = i ?? z, u = -1) : g[1] === void 0 ? u = -2 : (u = o.lastIndex - g[2].length, p = g[1], o = g[3] === void 0 ? A : g[3] === '"' ? St : At) : o === St || o === At ? o = A : o === xt || o === kt ? o = z : (o = A, i = void 0);
+    let p, v, u = -1, m = 0;
+    for (; m < h.length && (o.lastIndex = m, v = o.exec(h), v !== null); ) m = o.lastIndex, o === z ? v[1] === "!--" ? o = xt : v[1] !== void 0 ? o = kt : v[2] !== void 0 ? (Ft.test(v[2]) && (i = RegExp("</" + v[2], "g")), o = A) : v[3] !== void 0 && (o = A) : o === A ? v[0] === ">" ? (o = i ?? z, u = -1) : v[1] === void 0 ? u = -2 : (u = o.lastIndex - v[2].length, p = v[1], o = v[3] === void 0 ? A : v[3] === '"' ? St : At) : o === St || o === At ? o = A : o === xt || o === kt ? o = z : (o = A, i = void 0);
     const b = o === A && t[n + 1].startsWith("/>") ? " " : "";
     a += o === z ? h + ce : u >= 0 ? (s.push(p), h.slice(0, u) + Lt + h.slice(u) + k + b) : h + k + (u === -2 ? n : b);
   }
@@ -289,7 +289,7 @@ var ue = (t, e) => {
     let i;
     this.parts = [];
     let a = 0, o = 0;
-    const n = e.length - 1, h = this.parts, [p, g] = ue(e, r);
+    const n = e.length - 1, h = this.parts, [p, v] = ue(e, r);
     if (this.el = It.createElement(p, s), S.currentNode = this.el.content, r === 2 || r === 3) {
       const u = this.el.content.firstChild;
       u.replaceWith(...u.childNodes);
@@ -297,7 +297,7 @@ var ue = (t, e) => {
     for (; (i = S.nextNode()) !== null && h.length < n; ) {
       if (i.nodeType === 1) {
         if (i.hasAttributes()) for (const u of i.getAttributeNames()) if (u.endsWith(Lt)) {
-          const m = g[o++], b = i.getAttribute(u).split(k), y = /([.?@])?(.*)/.exec(m);
+          const m = v[o++], b = i.getAttribute(u).split(k), y = /([.?@])?(.*)/.exec(m);
           h.push({
             type: 1,
             index: a,
@@ -581,10 +581,10 @@ function at(t) {
   const e = Number(t);
   return Number.isFinite(e) ? e : null;
 }
-function v(t, e = "value") {
+function g(t, e = "value") {
   return t ? at(t[e]) : null;
 }
-function _(t, e = 0) {
+function f(t, e = 0) {
   return t === null ? "--" : t.toFixed(e);
 }
 function Ct(t, e) {
@@ -706,12 +706,12 @@ function Ht(t, e) {
 function Ot(t) {
   const [e, r] = t.domain, s = t.points.filter((c) => Number.isFinite(c.at) && Number.isFinite(c.value) && c.at >= e && c.at <= r).slice(-400);
   if (s.length < 2 || !(r > e)) return d`<div class="chart-empty">Not enough readings in this period yet.</div>`;
-  const i = (c) => t.band ? c.low ?? c.value : c.value, a = (c) => t.band ? c.high ?? c.value : c.value, { bottom: o, top: n } = Oe(Math.min(...s.map(i)), Math.max(...s.map(a)), t.minSpan ?? 2), h = n - o, p = (c) => Z((c - e) / (r - e) * 100), g = (c) => Z((1 - (c - o) / h) * 100), u = [];
+  const i = (c) => t.band ? c.low ?? c.value : c.value, a = (c) => t.band ? c.high ?? c.value : c.value, { bottom: o, top: n } = Oe(Math.min(...s.map(i)), Math.max(...s.map(a)), t.minSpan ?? 2), h = n - o, p = (c) => Z((c - e) / (r - e) * 100), v = (c) => Z((1 - (c - o) / h) * 100), u = [];
   for (const c of s) {
-    const f = u[u.length - 1];
-    f && (!t.gapMs || c.at - f[f.length - 1].at <= t.gapMs) ? f.push(c) : u.push([c]);
+    const _ = u[u.length - 1];
+    _ && (!t.gapMs || c.at - _[_.length - 1].at <= t.gapMs) ? _.push(c) : u.push([c]);
   }
-  const m = t.smooth !== !1, b = (c) => u.map((f) => Ht(f.map((ft) => [p(ft.at), g(c(ft))]), m)).join(" "), y = u.filter((c) => c.length > 1).map((c) => `${Ht(c.map((f) => [p(f.at), g(f.value)]), m)} L${$(p(c[c.length - 1].at))},100 L${$(p(c[0].at))},100 Z`).join(" "), N = s.map((c) => p(c.at)), J = (c) => c <= 0 ? 0 : c >= s.length ? 100 : (N[c - 1] + N[c]) / 2, w = t.hover !== null ? s[t.hover] : void 0, R = w ? p(w.at) : 0, P = (c) => `${_(c, t.digits)}${t.unit ? ` ${t.unit}` : ""}`, vt = [
+  const m = t.smooth !== !1, b = (c) => u.map((_) => Ht(_.map((ft) => [p(ft.at), v(c(ft))]), m)).join(" "), y = u.filter((c) => c.length > 1).map((c) => `${Ht(c.map((_) => [p(_.at), v(_.value)]), m)} L${$(p(c[c.length - 1].at))},100 L${$(p(c[0].at))},100 Z`).join(" "), N = s.map((c) => p(c.at)), J = (c) => c <= 0 ? 0 : c >= s.length ? 100 : (N[c - 1] + N[c]) / 2, w = t.hover !== null ? s[t.hover] : void 0, R = w ? p(w.at) : 0, P = (c) => `${f(c, t.digits)}${t.unit ? ` ${t.unit}` : ""}`, vt = [
     n,
     o + h / 2,
     o
@@ -720,18 +720,18 @@ function Ot(t) {
     <div class="chart ${t.kind}">
       <div class="yaxis">${vt.map((c) => d`<span>${U(c)}</span>`)}</div>
       <div class="plot" role="img" aria-label=${t.description} @pointerleave=${() => t.onHover(null)}>
-        ${vt.map((c, f) => d`<div class="grid" style="top:${f * 50}%"></div>`)}
+        ${vt.map((c, _) => d`<div class="grid" style="top:${_ * 50}%"></div>`)}
         <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
           ${y ? Y`<path class="area" d=${y}></path>` : l}
           ${t.band ? Y`<path class="line high" d=${b(a)}></path><path class="line low" d=${b(i)}></path>` : l}
           <path class="line avg" d=${b((c) => c.value)}></path>
         </svg>
-        ${t.markers ? s.map((c) => d`<i class="mark" style="left:${p(c.at)}%;top:${g(c.value)}%"></i>`) : l}
+        ${t.markers ? s.map((c) => d`<i class="mark" style="left:${p(c.at)}%;top:${v(c.value)}%"></i>`) : l}
         ${w ? d`
               <div class="guide" style="left:${R}%"></div>
-              ${t.band ? d`<i class="dot high" style="left:${R}%;top:${g(a(w))}%"></i
-                    ><i class="dot low" style="left:${R}%;top:${g(i(w))}%"></i>` : l}
-              <i class="dot avg" style="left:${R}%;top:${g(w.value)}%"></i>
+              ${t.band ? d`<i class="dot high" style="left:${R}%;top:${v(a(w))}%"></i
+                    ><i class="dot low" style="left:${R}%;top:${v(i(w))}%"></i>` : l}
+              <i class="dot avg" style="left:${R}%;top:${v(w.value)}%"></i>
               <div class="tip ${R > 55 ? "left" : ""}" style="left:${R}%">
                 <b>${w.title}</b>
                 ${t.band ? d`<span class="high"><i></i>High<u>${P(a(w))}</u></span>
@@ -739,20 +739,20 @@ function Ot(t) {
                       <span class="low"><i></i>Low<u>${P(i(w))}</u></span>` : d`<span class="avg"><i></i>${t.label}<u>${P(w.value)}</u></span>`}
               </div>
             ` : l}
-        ${s.map((c, f) => d`<button
+        ${s.map((c, _) => d`<button
             class="hit"
-            style="left:${J(f)}%;width:${J(f + 1) - J(f)}%"
+            style="left:${J(_)}%;width:${J(_ + 1) - J(_)}%"
             aria-label="${c.title}: ${t.label} ${P(c.value)}"
-            @pointerenter=${() => t.onHover(f)}
-            @focus=${() => t.onHover(f)}
+            @pointerenter=${() => t.onHover(_)}
+            @focus=${() => t.onHover(_)}
             @blur=${() => t.onHover(null)}
-            @click=${() => t.onHover(f)}
+            @click=${() => t.onHover(_)}
           ></button>`)}
       </div>
       <div class="xaxis">
         ${t.ticks.filter((c) => c.at >= e && c.at <= r).map((c) => {
-    const f = p(c.at);
-    return d`<span class=${f < 6 ? "" : f > 94 ? "end" : "centered"} style="left:${f}%">${c.label}</span>`;
+    const _ = p(c.at);
+    return d`<span class=${_ < 6 ? "" : _ > 94 ? "end" : "centered"} style="left:${_}%">${c.label}</span>`;
   })}
       </div>
     </div>
@@ -889,7 +889,7 @@ function Zt(t) {
   const e = typeof t == "string" ? t : nt;
   return Object.prototype.hasOwnProperty.call(tt, e) ? tt[e] : tt[nt];
 }
-function qt(t) {
+function Gt(t) {
   return Zt(t).tiles ?? !1;
 }
 function De(t, e, r = !1) {
@@ -903,7 +903,7 @@ function De(t, e, r = !1) {
   }
   return i;
 }
-var Gt, Pt = "vital-rings-card-editor", Kt = {
+var qt, Pt = "vital-rings-card-editor", Kt = {
   entity: "VitalRings entity",
   name: "Title",
   preset: "Colour preset",
@@ -1057,7 +1057,7 @@ var Gt, Pt = "vital-rings-card-editor", Kt = {
       show_body: !0,
       trend_range: "6m",
       theme_background: !1,
-      tiles: qt(this._config.preset),
+      tiles: Gt(this._config.preset),
       ...this._config,
       heart_hours: String(this._config.heart_hours ?? 48)
     };
@@ -1086,8 +1086,8 @@ var Gt, Pt = "vital-rings-card-editor", Kt = {
     }));
   }
 };
-Gt = Xt;
-Gt.properties = {
+qt = Xt;
+qt.properties = {
   hass: { attribute: !1 },
   _config: { state: !0 }
 };
@@ -1917,7 +1917,7 @@ var Be = te`
       transition: none;
     }
   }
-`, gt, Fe = "1.0.0", q = "vital-rings-card", x = 36e5, D = 24 * x, Ve = [{
+`, gt, Fe = "1.0.1", G = "vital-rings-card", x = 36e5, D = 24 * x, Ve = [{
   key: "vitals",
   label: "Vitals",
   score: "vitals_score",
@@ -1990,7 +1990,12 @@ var Be = te`
     about: "The most oxygen your body can use during hard exercise, estimated by your watch from outdoor walks, runs and hikes. It is the standard measure of cardio fitness.",
     scoring: "Your percentile among adults of your age and sex (FRIEND registry). The median scores 50; the 95th percentile or higher scores 100."
   }
-};
+}, je = /* @__PURE__ */ new Set([
+  "resting_heart_rate",
+  "heart_rate_variability",
+  "respiratory_rate",
+  "oxygen_saturation"
+]);
 function zt(t) {
   const e = Math.round(t), r = e % 100;
   return `${e}${r >= 11 && r <= 13 ? "th" : [
@@ -2021,11 +2026,11 @@ var et = {
     days: 6935,
     period: "month"
   }
-}, je = [
+}, We = [
   "heart",
   "vo2",
   "weight"
-], We = 2, Ye = 10, Ze = [15, 40], rt = (t) => Math.min(1, Math.max(0, t)), Jt = class extends H {
+], Ye = 2, Ze = 10, Ge = [15, 40], rt = (t) => Math.min(1, Math.max(0, t)), Jt = class extends H {
   constructor() {
     super(), this._ticks = 0, this._token = 0, this._seriesTokens = {}, this._summary = null, this._series = {}, this._heartHours = 48, this._vo2Range = "6m", this._weightRange = "6m", this._hover = null, this._tip = null, this._tipAbove = !1, this._error = null, this._now = Date.now(), this._ready = !1;
   }
@@ -2067,7 +2072,7 @@ var et = {
     super.disconnectedCallback(), window.clearInterval(this._timer), this._timer = void 0;
   }
   _tick() {
-    this._now = Date.now(), this._ticks += 1, this._ticks % We === 0 && this._load(this._ticks % Ye === 0);
+    this._now = Date.now(), this._ticks += 1, this._ticks % Ye === 0 && this._load(this._ticks % Ze === 0);
   }
   shouldUpdate(t) {
     if (t.size > 1 || !t.has("hass")) return !0;
@@ -2106,7 +2111,7 @@ var et = {
       s === this._token && (this._error = "VitalRings did not answer. Check that the integration is set up and loaded.");
       return;
     }
-    if (t) for (const i of je) this._loadSeries(i);
+    if (t) for (const i of We) this._loadSeries(i);
   }
   _request(t) {
     if (t === "heart") return {
@@ -2179,7 +2184,7 @@ var et = {
       t.show_body ? this._renderBody() : l
     ].filter((o) => o !== l);
     return d`
-      <ha-card class=${t.tiles ?? qt(t.preset) ? "tiles" : ""} style=${Ae(e)}>
+      <ha-card class=${t.tiles ?? Gt(t.preset) ? "tiles" : ""} style=${Ae(e)}>
         <div class="header">
           <span class="title">${t.name ?? "Heart & vitals"}</span>
           ${this._renderSynced()}
@@ -2202,18 +2207,19 @@ var et = {
     return !this._ready || t === null ? 0 : rt(t / 100);
   }
   _reading(t, e) {
-    const r = v(e);
+    const r = g(e, "scored") ?? g(e);
     if (r === null) return "No reading yet";
-    if (t === "resting_heart_rate") return `Resting ${_(r)} bpm`;
-    if (t === "heart_rate_variability") return `HRV ${_(r)} ms`;
-    if (t === "respiratory_rate") return `${_(r, 1)} breaths/min`;
-    if (t === "oxygen_saturation") return `${_(r)} %`;
+    const s = t === "respiratory_rate" ? 1 : 0, i = g(e), a = e?.basis === "day" && i !== null && f(i, s) !== f(r, s) ? ` \xB7 latest ${f(i, s)}` : "";
+    if (t === "resting_heart_rate") return `Resting ${f(r)} bpm${a}`;
+    if (t === "heart_rate_variability") return `HRV ${f(r)} ms${a}`;
+    if (t === "respiratory_rate") return `${f(r, 1)} br/min${a}`;
+    if (t === "oxygen_saturation") return `${f(r)} %${a}`;
     if (t === "sleeping_heart_rate") {
-      const i = v(e, "lowest");
-      return `${_(r)} bpm${i !== null ? ` \xB7 low ${_(i)}` : ""}`;
+      const n = g(e, "lowest");
+      return `${f(r)} bpm${n !== null ? ` \xB7 low ${f(n)}` : ""}`;
     }
-    const s = v(e, "percentile");
-    return `${_(r, 1)}${s !== null ? ` \xB7 ${zt(s)} percentile` : ""}`;
+    const o = g(e, "percentile");
+    return `${f(r, 1)}${o !== null ? ` \xB7 ${zt(o)} percentile` : ""}`;
   }
   _best(t) {
     const e = t?.full;
@@ -2226,12 +2232,12 @@ var et = {
     this._tipAbove = s.bottom - r.bottom < 200 && r.top - s.top > s.bottom - r.bottom, this._tip = t;
   }
   _renderInfo(t, e, r) {
-    const s = Ie[t], i = v(r, "score"), a = this._usual(r, e === "vo2_max" || e === "respiratory_rate" ? 1 : 0);
+    const s = Ie[t], i = g(r, "score"), a = this._usual(r, e === "vo2_max" || e === "respiratory_rate" ? 1 : 0), o = r?.readings_24h, n = r?.basis === "day" ? `Scored on your average over the last 24 hours${o ? ` (${o} ${o === 1 ? "hour" : "hours"} with readings)` : ""}, so one odd reading does not empty the ring.` : r?.basis === "latest" && je.has(e) ? "No readings in the last 24 hours, so this is scored on your latest reading." : "";
     return d`
       <div class="info ${this._tipAbove ? "above" : ""}" id="vr-tip-${t}" role="tooltip">
         <b>${s.title}</b>
         <p>${s.about}</p>
-        <p><i>Score</i>${s.scoring}</p>
+        <p><i>Score</i>${s.scoring}${n ? ` ${n}` : ""}</p>
         <p>
           <i>Yours</i>${this._reading(e, r)}${i !== null ? `, ${Math.round(i)} of 100` : ""}${a ? `. ${a}` : ""}
         </p>
@@ -2239,7 +2245,7 @@ var et = {
     `;
   }
   _renderSet(t, e) {
-    const r = v(this._metric(t.score)), s = r === null ? "" : r >= 85 ? "excellent" : r >= 70 ? "good" : r >= 50 ? "fair" : "low", i = [
+    const r = g(this._metric(t.score)), s = r === null ? "" : r >= 85 ? "excellent" : r >= 70 ? "good" : r >= 50 ? "fair" : "low", i = [
       70,
       56,
       42
@@ -2248,9 +2254,9 @@ var et = {
       return {
         ...n,
         data: h,
-        score: v(h, "score")
+        score: g(h, "score")
       };
-    }), o = `${t.label} score ${r === null ? "not available" : `${Math.round(r)} of 100`}. ` + a.map((n) => `${n.label} ${_(n.score)} of 100`).join(", ");
+    }), o = `${t.label} score ${r === null ? "not available" : `${Math.round(r)} of 100`}. ` + a.map((n) => `${n.label} ${f(n.score)} of 100`).join(", ");
     return d`
       <div class="set">
         <div class="rings ${s ? `b-${s}` : ""}" role="img" aria-label=${o}>
@@ -2264,12 +2270,12 @@ var et = {
                   </linearGradient>`)}
             </defs>
             ${a.map((n, h) => {
-      const p = i[h], g = 2 * Math.PI * p, u = this._fraction(n.score);
+      const p = i[h], v = 2 * Math.PI * p, u = this._fraction(n.score);
       return Y`
                 <circle class="track c-${n.key}" cx="80" cy="80" r=${p} stroke-width="10"></circle>
                 <circle style="stroke:url(#vr-grad-${n.key})" class="fill c-${n.key} ${u <= 0 ? "empty" : ""}"
                   cx="80" cy="80" r=${p} stroke-width="10"
-                  stroke-dasharray=${g} stroke-dashoffset=${g * (1 - u)}></circle>`;
+                  stroke-dasharray=${v} stroke-dashoffset=${v * (1 - u)}></circle>`;
     })}
           </svg>
           <div class="center">
@@ -2291,7 +2297,7 @@ var et = {
                     <div class="row-head">
                       <span class="dot"></span>
                       <span class="row-name">${n.label}</span>
-                      <span class="row-value"><b>${_(n.score)}</b>/100</span>
+                      <span class="row-value"><b>${f(n.score)}</b>/100</span>
                     </div>
                     <div class="bar"><div class="bar-fill" style="width:${this._fraction(n.score) * 100}%"></div></div>
                     <div class="row-detail">
@@ -2327,9 +2333,9 @@ var et = {
     };
   }
   _range(t, e) {
-    const r = v(t), s = v(t, "low"), i = v(t, "high"), a = v(t, "average");
+    const r = g(t), s = g(t, "low"), i = g(t, "high"), a = g(t, "average");
     if (r === null || s === null || i === null || i < s) return l;
-    const o = Math.max(i - s, e) * 0.6, n = Math.min(s, r) - o, h = Math.max(i, r) + o, p = (g) => rt((g - n) / (h - n)) * 100;
+    const o = Math.max(i - s, e) * 0.6, n = Math.min(s, r) - o, h = Math.max(i, r) + o, p = (v) => rt((v - n) / (h - n)) * 100;
     return d`
       <div class="range" title="Your usual range, with today's value (${r > i ? "above" : r < s ? "below" : "inside"} it)">
         <span class="range-band" style="left:${p(s)}%;width:${Math.max(3, p(i) - p(s))}%"></span>
@@ -2339,10 +2345,10 @@ var et = {
     `;
   }
   _usual(t, e) {
-    const r = v(t, "low"), s = v(t, "high");
+    const r = g(t, "low"), s = g(t, "high");
     if (r === null || s === null) return "";
     const i = t?.window_days ? ` \xB7 ${t.window_days} days` : "";
-    return `Usual ${_(r, e)}\u2013${_(s, e)}${i}`;
+    return `Usual ${f(r, e)}\u2013${f(s, e)}${i}`;
   }
   _stat(t, e, r, s = l, i = "", a = !1) {
     return d`
@@ -2409,9 +2415,9 @@ var et = {
   _renderHeart() {
     const t = this._metric("heart_rate"), e = this._metric("awake_heart_rate"), r = this._metric("awake_heart_rate_previous"), s = this._metric("workout_heart_rate"), i = this._points("heart", "hour");
     if (!this._summary) return l;
-    const a = v(t) !== null || v(e) !== null || v(r) !== null || s;
+    const a = g(t) !== null || g(e) !== null || g(r) !== null || s;
     if (!i?.length && !a) return l;
-    const o = Ct(t?.measured_at, this._now), n = e?.since ? Date.parse(e.since) : NaN, h = this._now, p = h - this._heartHours * x, g = i === null ? d`<div class="chart-empty">${"Loading\u2026"}</div>` : Ot({
+    const o = Ct(t?.measured_at, this._now), n = e?.since ? Date.parse(e.since) : NaN, h = this._now, p = h - this._heartHours * x, v = i === null ? d`<div class="chart-empty">${"Loading\u2026"}</div>` : Ot({
       kind: "k-heart",
       points: i,
       domain: [p, h],
@@ -2425,7 +2431,7 @@ var et = {
       hover: this._hoverOf("heart"),
       onHover: (y) => this._setHover("heart", y),
       description: `Heart rate over the last ${this._heartHours} hours: hourly average, high and low`
-    }), u = s?.start ? Date.parse(s.start) : NaN, m = v(s, "duration_minutes"), b = v(s, "max");
+    }), u = s?.start ? Date.parse(s.start) : NaN, m = g(s, "duration_minutes"), b = g(s, "max");
     return d`
       <div class="section heart">
         <div class="section-head">
@@ -2447,18 +2453,18 @@ var et = {
       this._heartHours = y, this._hover = null, this._loadSeries("heart");
     })}
         </div>
-        ${g}
+        ${v}
         ${i?.length ? d`<div class="legend k-heart">
               <span class="high"><i></i>Hourly high</span>
               <span class="avg"><i></i>Average</span>
               <span class="low"><i></i>Hourly low</span>
             </div>` : l}
         ${a ? d`<div class="stats" style="margin-top:12px">
-              ${v(t) !== null ? this._stat("heart", "Latest reading", d`<b>${_(v(t))}</b> bpm`, l, o === null ? "" : o === "now" ? "Just now" : `${o} ago`) : l}
-              ${v(e) !== null ? this._stat("awake", "Awake today", d`<b>${_(v(e))}</b> bpm`, l, Number.isFinite(n) ? `Since ${V(n, this._language, this._timeZone)}` : "") : l}
-              ${v(r) !== null ? this._stat("awake", "Awake, day before", d`<b>${_(v(r))}</b> bpm`, l, "Wake-up to bedtime") : l}
-              ${s ? this._stat("workout", `${Re(s.workout)}${m !== null ? ` \xB7 ${Me(m)}` : ""}`, v(s) !== null ? d`<b>${_(v(s))}</b> bpm
-                          avg${b !== null ? ` \xB7 max ${_(b)}` : ""}` : d`<b>--</b> no heart rate yet`, l, Number.isFinite(u) ? Tt(u, this._language, this._timeZone) : "") : l}
+              ${g(t) !== null ? this._stat("heart", "Latest reading", d`<b>${f(g(t))}</b> bpm`, l, o === null ? "" : o === "now" ? "Just now" : `${o} ago`) : l}
+              ${g(e) !== null ? this._stat("awake", "Awake today", d`<b>${f(g(e))}</b> bpm`, l, Number.isFinite(n) ? `Since ${V(n, this._language, this._timeZone)}` : "") : l}
+              ${g(r) !== null ? this._stat("awake", "Awake, day before", d`<b>${f(g(r))}</b> bpm`, l, "Wake-up to bedtime") : l}
+              ${s ? this._stat("workout", `${Re(s.workout)}${m !== null ? ` \xB7 ${Me(m)}` : ""}`, g(s) !== null ? d`<b>${f(g(s))}</b> bpm
+                          avg${b !== null ? ` \xB7 max ${f(b)}` : ""}` : d`<b>--</b> no heart rate yet`, l, Number.isFinite(u) ? Tt(u, this._language, this._timeZone) : "") : l}
             </div>` : l}
       </div>
     `;
@@ -2495,9 +2501,9 @@ var et = {
     });
   }
   _renderVitals() {
-    const t = this._metric("vo2_max"), e = v(t);
+    const t = this._metric("vo2_max"), e = g(t);
     if (!this._summary || e === null && !this._series.vo2?.length) return l;
-    const r = v(t, "percentile");
+    const r = g(t, "percentile");
     return d`
       <div class="section vitals">
         <div class="section-head">
@@ -2511,22 +2517,22 @@ var et = {
       minSpan: 2
     })}
         ${e !== null ? d`<div class="stats" style="margin-top:12px">
-              ${this._stat("vo2", "Latest estimate", d`<b>${_(e, 1)}</b> ${"mL/kg\xB7min"}`, this._range(t, 1), this._usual(t, 1))}
+              ${this._stat("vo2", "Latest estimate", d`<b>${f(e, 1)}</b> ${"mL/kg\xB7min"}`, this._range(t, 1), this._usual(t, 1))}
               ${r !== null ? this._stat("vo2", "Benchmark", d`<b>${zt(r)}</b> percentile`, l, "Same age and sex") : l}
             </div>` : l}
       </div>
     `;
   }
   _renderBody() {
-    const t = this._metric("weight"), e = this._metric("height"), r = this._metric("bmi"), s = v(t);
-    if (!this._summary || s === null && v(e) === null && !this._series.weight?.length) return l;
-    const i = this._pounds, a = i ? Se : 1, o = i ? "lb" : "kg", n = v(t, "first");
+    const t = this._metric("weight"), e = this._metric("height"), r = this._metric("bmi"), s = g(t);
+    if (!this._summary || s === null && g(e) === null && !this._series.weight?.length) return l;
+    const i = this._pounds, a = i ? Se : 1, o = i ? "lb" : "kg", n = g(t, "first");
     let h = "";
     if (s !== null && n !== null && (t?.days ?? 0) > 1) {
       const y = (s - n) * a, N = t?.window_days ?? 30;
       h = Math.abs(y) < 0.05 ? `Steady over ${N} days` : `${y < 0 ? "Down" : "Up"} ${Math.abs(y).toFixed(1)} ${o} in ${N} days`;
     }
-    const p = v(r), g = (r?.category ?? "").slice(0, 20), [u, m] = Ze, b = d`
+    const p = g(r), v = (r?.category ?? "").slice(0, 20), [u, m] = Ge, b = d`
       <div class="range zones" title="Underweight, healthy, overweight and obese (WHO adult classes)">
         <span class="z-low" style="flex:${18.5 - u}"></span>
         <span class="z-healthy" style="flex:${6.5}"></span>
@@ -2554,9 +2560,9 @@ var et = {
       smooth: !1
     })}
         <div class="stats" style="margin-top:12px">
-          ${s !== null ? this._stat("weight", "Weight", d`<b>${_(s * a, 1)}</b> ${o}`, l, h) : l}
-          ${p !== null ? this._stat("bmi", "Body mass index", d`<b>${_(p, 1)}</b> ${g ? g.charAt(0).toUpperCase() + g.slice(1) : ""}`, b, "Healthy 18.5\u201325") : l}
-          ${v(e) !== null ? this._stat("height", "Height", d`<b>${Te(v(e), i)}</b>`) : l}
+          ${s !== null ? this._stat("weight", "Weight", d`<b>${f(s * a, 1)}</b> ${o}`, l, h) : l}
+          ${p !== null ? this._stat("bmi", "Body mass index", d`<b>${f(p, 1)}</b> ${v ? v.charAt(0).toUpperCase() + v.slice(1) : ""}`, b, "Healthy 18.5\u201325") : l}
+          ${g(e) !== null ? this._stat("height", "Height", d`<b>${Te(g(e), i)}</b>`) : l}
         </div>
       </div>
     `;
@@ -2579,10 +2585,10 @@ gt.properties = {
   _now: { state: !0 },
   _ready: { state: !0 }
 };
-customElements.get(q) || customElements.define(q, Jt);
+customElements.get(G) || customElements.define(G, Jt);
 window.customCards = window.customCards ?? [];
-window.customCards.some((t) => t.type === q) || window.customCards.push({
-  type: q,
+window.customCards.some((t) => t.type === G) || window.customCards.push({
+  type: G,
   name: "Vital Rings",
   description: "Two sets of rings scored against health benchmarks, a heart rate chart, VO2 max and weight.",
   preview: !0

@@ -123,11 +123,17 @@ DAILY = {
 }
 
 
+# Metrics the fake recorder has no rows for (filled by a test, emptied before each).
+NO_STATISTICS: set[str] = set()
+
+
 async def fake_statistics(self, statistic_ids, start, end, period):
     """Stand-in for the recorder: invented rows for the ids asked for."""
     result = {}
     for statistic_id in statistic_ids:
         key = statistic_id.removeprefix(STAT)
+        if key in NO_STATISTICS:
+            continue
         if period == "hour" and key == "heart_rate":
             result[statistic_id] = heart_rate_hours(start, end)
         elif key in DAILY:
@@ -138,6 +144,7 @@ async def fake_statistics(self, statistic_ids, start, end, period):
 @pytest.fixture(autouse=True)
 async def _setup(hass: HomeAssistant, hass_storage, freezer):
     freezer.move_to(NOW)
+    NO_STATISTICS.clear()
     await hass.config.async_set_time_zone("Australia/Sydney")
     with patch.object(VitalRingsManager, "_async_statistics", fake_statistics):
         yield
@@ -453,12 +460,16 @@ async def test_rings_are_scored_against_benchmarks(hass: HomeAssistant) -> None:
     entry = await setup_entry(hass)
     metrics = entry.runtime_data.metrics
 
-    # Resting 48 bpm and 14.5 breaths a minute earn full marks; 66 ms is most of the way.
+    # Scored on the last day's average: resting 48 bpm and 15 breaths a minute earn
+    # full marks; 64 ms of variability is most of the way.
     assert metrics["resting_heart_rate"]["score"] == 100
     assert metrics["resting_heart_rate"]["full"] == {"direction": "low", "low": 50, "high": None}
-    assert metrics["heart_rate_variability"]["score"] == 78
+    assert metrics["heart_rate_variability"]["score"] == 76
+    assert metrics["heart_rate_variability"]["scored"] == 64
+    assert metrics["heart_rate_variability"]["basis"] == "day"
+    assert metrics["heart_rate_variability"]["value"] == 66  # the latest reading stays
     assert metrics["respiratory_rate"]["score"] == 100
-    assert metrics["vitals_score"] == {"value": 93, "rings": 3}
+    assert metrics["vitals_score"] == {"value": 92, "rings": 3}
 
     assert metrics["sleeping_heart_rate"]["score"] == 100
     assert metrics["oxygen_saturation"]["score"] == 100
@@ -466,7 +477,7 @@ async def test_rings_are_scored_against_benchmarks(hass: HomeAssistant) -> None:
     assert metrics["vo2_max"]["score"] == 88
     assert metrics["fitness_score"] == {"value": 96, "rings": 3}
 
-    assert float(hass.states.get("sensor.sample_vitals_score").state) == 93
+    assert float(hass.states.get("sensor.sample_vitals_score").state) == 92
     assert float(hass.states.get("sensor.sample_fitness_score").state) == 96
     assert hass.states.get("sensor.sample_sleeping_heart_rate").attributes["score"] == 100
 
@@ -508,6 +519,7 @@ async def test_options_reject_an_impossible_year_of_birth(hass: HomeAssistant) -
 
 
 async def test_a_missing_ring_metric_is_left_out_of_its_set(hass: HomeAssistant) -> None:
+    NO_STATISTICS.update({"vo2_max", "respiratory_rate"})
     entry = await setup_entry(hass, without=("vo2_max", "respiratory_rate"))
     metrics = entry.runtime_data.metrics
     assert "score" not in metrics.get("respiratory_rate", {})
@@ -601,3 +613,26 @@ async def test_times_of_day_are_not_recorded(hass: HomeAssistant) -> None:
     from custom_components.vital_rings.sensor import VitalRingsSensor  # noqa: PLC0415
 
     assert {"start", "end", "since"} <= VitalRingsSensor._unrecorded_attributes
+
+
+async def test_one_odd_reading_does_not_empty_a_ring(hass: HomeAssistant) -> None:
+    entry = await setup_entry(hass)
+    manager = entry.runtime_data
+    # A single low spot reading of blood oxygen and of heart rate variability.
+    hass.states.async_set(entity_id("oxygen_saturation"), "90", {"unit_of_measurement": "%"})
+    hass.states.async_set(entity_id("heart_rate_variability"), "30", {"unit_of_measurement": "ms"})
+    await manager.async_refresh()
+    oxygen = manager.metrics["oxygen_saturation"]
+    # The ring follows the last day's average (97 %), and still shows the latest reading.
+    assert (oxygen["value"], oxygen["scored"], oxygen["basis"]) == (90, 97, "day")
+    assert oxygen["score"] == 100
+    assert oxygen["readings_24h"] >= 1
+    assert manager.metrics["heart_rate_variability"]["score"] == 76
+    assert manager.metrics["fitness_score"]["value"] == 96
+
+    # Without any reading in the last day there is only the latest one to score.
+    NO_STATISTICS.add("oxygen_saturation")
+    await manager.async_refresh()
+    oxygen = manager.metrics["oxygen_saturation"]
+    assert (oxygen["scored"], oxygen["basis"], oxygen["score"]) == (90, "latest", 0)
+    assert "average_24h" not in oxygen

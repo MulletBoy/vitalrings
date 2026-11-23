@@ -35,7 +35,7 @@ import {
   type VitalRingsCardConfig,
 } from "./types";
 
-export const CARD_VERSION = "1.0.0";
+export const CARD_VERSION = "1.0.1";
 const CARD_TAG = "vital-rings-card";
 
 const HOUR = 3_600_000;
@@ -106,6 +106,14 @@ const RING_INFO: Record<RingKey, { title: string; about: string; scoring: string
       "Your percentile among adults of your age and sex (FRIEND registry). The median scores 50; the 95th percentile or higher scores 100.",
   },
 };
+
+/** Rings scored on the last day's average where the integration has one. */
+const DAY_AVERAGED = new Set([
+  "resting_heart_rate",
+  "heart_rate_variability",
+  "respiratory_rate",
+  "oxygen_saturation",
+]);
 
 /** 1 -> "1st", 72 -> "72nd" */
 function ordinal(value: number): string {
@@ -425,12 +433,20 @@ export class VitalRingsCard extends LitElement {
 
   /** A ring's measured value in a few words: "Resting 48 bpm". */
   private _reading(name: string, metric: Metric | undefined): string {
-    const value = field(metric);
+    // The scored value: the last day's average where there is one, else the latest reading.
+    const value = field(metric, "scored") ?? field(metric);
     if (value === null) return "No reading yet";
-    if (name === "resting_heart_rate") return `Resting ${show(value)} bpm`;
-    if (name === "heart_rate_variability") return `HRV ${show(value)} ms`;
-    if (name === "respiratory_rate") return `${show(value, 1)} breaths/min`;
-    if (name === "oxygen_saturation") return `${show(value)} %`;
+    // When the average is shown, the latest reading follows if it reads differently.
+    const digits = name === "respiratory_rate" ? 1 : 0;
+    const latest = field(metric);
+    const other =
+      metric?.basis === "day" && latest !== null && show(latest, digits) !== show(value, digits)
+        ? ` · latest ${show(latest, digits)}`
+        : "";
+    if (name === "resting_heart_rate") return `Resting ${show(value)} bpm${other}`;
+    if (name === "heart_rate_variability") return `HRV ${show(value)} ms${other}`;
+    if (name === "respiratory_rate") return `${show(value, 1)} br/min${other}`;
+    if (name === "oxygen_saturation") return `${show(value)} %${other}`;
     if (name === "sleeping_heart_rate") {
       const lowest = field(metric, "lowest");
       return `${show(value)} bpm${lowest !== null ? ` · low ${show(lowest)}` : ""}`;
@@ -464,11 +480,18 @@ export class VitalRingsCard extends LitElement {
     const info = RING_INFO[key];
     const score = field(metric, "score");
     const usual = this._usual(metric, name === "vo2_max" || name === "respiratory_rate" ? 1 : 0);
+    const hours = metric?.readings_24h;
+    const basis =
+      metric?.basis === "day"
+        ? `Scored on your average over the last 24 hours${hours ? ` (${hours} ${hours === 1 ? "hour" : "hours"} with readings)` : ""}, so one odd reading does not empty the ring.`
+        : metric?.basis === "latest" && DAY_AVERAGED.has(name)
+          ? "No readings in the last 24 hours, so this is scored on your latest reading."
+          : "";
     return html`
       <div class="info ${this._tipAbove ? "above" : ""}" id="vr-tip-${key}" role="tooltip">
         <b>${info.title}</b>
         <p>${info.about}</p>
-        <p><i>Score</i>${info.scoring}</p>
+        <p><i>Score</i>${info.scoring}${basis ? ` ${basis}` : ""}</p>
         <p>
           <i>Yours</i>${this._reading(name, metric)}${score !== null ? `, ${Math.round(score)} of 100` : ""}${usual
             ? `. ${usual}`

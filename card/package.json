@@ -1,6 +1,6 @@
 {
   "name": "vital-rings-card",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Heart, vitals and body card for Home Assistant",
   "license": "MIT",
   "private": true,

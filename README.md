@@ -107,6 +107,7 @@ and restart.
 
 | Version | In short |
 |---|---|
+| **1.0.1** | Heart, Recovery, Breathing and Blood oxygen are now scored on your average over the last 24 hours. In 1.0.0 they used the latest single reading, so one low spot reading could empty a ring until the next one arrived. The row shows the average, with the latest reading beside it. |
 | **1.0.0** | First release: six rings scored against published benchmarks in two sets (Vitals and Fitness) with an explanation on every ring, real sleeping and awake heart rate averages, the heart rate, VO2 max and weight charts, nine sensors, and the card in three presets. |
 
 Full notes for every version are on the [releases page](https://github.com/MulletBoy/vitalrings/releases).
@@ -176,6 +177,11 @@ The VO2 max benchmark needs your year of birth and sex, which you can give when
 setting VitalRings up or later under **Configure**. Both are optional and stay
 in your Home Assistant. Without them the 40-49 row and the mean of the men's
 and women's values are used.
+
+Heart, Recovery, Breathing and Blood oxygen are scored on your **average over the last 24
+hours**, not the latest reading: a watch takes these as spot readings, and one odd reading
+should not empty a ring. The row shows that average, with the latest reading beside it when it
+differs. If there has been no reading for a day, the latest one is scored.
 
 The number in the middle of each set is the mean of its three rings.
 

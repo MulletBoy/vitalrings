@@ -102,6 +102,11 @@ export interface Metric {
   full?: { direction?: string; low?: number | null; high?: number | null };
   percentile?: number | null;
   rings?: number;
+  /** The value that was scored: the last day's average, or the latest reading. */
+  scored?: number | null;
+  basis?: string;
+  average_24h?: number | null;
+  readings_24h?: number;
 }
 
 export interface Summary {
