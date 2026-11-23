@@ -1,0 +1,89 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Heart, vitals and body",
+        "description": "Choose whose health data to use. Supported source: Life Dashboard.",
+        "data": {
+          "name": "Name",
+          "source_entry": "Health data from",
+          "birth_year": "Year of birth (optional)",
+          "sex": "Sex (optional)"
+        },
+        "data_description": {
+          "name": "Used for the device and its entities, for example a person's name.",
+          "source_entry": "The integration entry that receives this person's health data.",
+          "birth_year": "Used only to pick the VO2 max benchmark for your age. Without it, the benchmark for ages 40 to 49 is used.",
+          "sex": "Used only to pick the VO2 max benchmark. Without it, the mean of the benchmarks for men and women is used."
+        }
+      }
+    },
+    "error": {
+      "not_a_source": "This entry does not belong to a supported integration.",
+      "no_heart_rate": "This entry has no heart rate sensor. Send health data to it first, or enable its heart rate sensor.",
+      "invalid_person": "The year of birth or the sex is not a value that can be used.",
+      "invalid_name": "Give a name of 1 to 60 characters."
+    },
+    "abort": {
+      "already_configured": "This health data is already set up.",
+      "no_source": "No supported health integration is set up yet. Install and set up Life Dashboard first."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "vitals_score": {
+        "name": "Vitals score"
+      },
+      "fitness_score": {
+        "name": "Fitness score"
+      },
+      "sleeping_heart_rate": {
+        "name": "Sleeping heart rate"
+      },
+      "awake_heart_rate": {
+        "name": "Awake heart rate"
+      },
+      "awake_heart_rate_previous_day": {
+        "name": "Awake heart rate previous day"
+      },
+      "resting_heart_rate_average": {
+        "name": "Resting heart rate 30-day average"
+      },
+      "heart_rate_variability_average": {
+        "name": "Heart rate variability 30-day average"
+      },
+      "workout_heart_rate": {
+        "name": "Workout heart rate"
+      },
+      "bmi": {
+        "name": "Body mass index"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "VitalRings options",
+        "data": {
+          "birth_year": "Year of birth (optional)",
+          "sex": "Sex (optional)"
+        },
+        "data_description": {
+          "birth_year": "Used only to pick the VO2 max benchmark for your age. Without it, the benchmark for ages 40 to 49 is used.",
+          "sex": "Used only to pick the VO2 max benchmark. Without it, the mean of the benchmarks for men and women is used."
+        }
+      }
+    },
+    "error": {
+      "invalid_person": "The year of birth or the sex is not a value that can be used."
+    }
+  },
+  "selector": {
+    "sex": {
+      "options": {
+        "male": "Male",
+        "female": "Female"
+      }
+    }
+  }
+}

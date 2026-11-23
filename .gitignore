@@ -1,0 +1,38 @@
+# Dependencies and build output
+node_modules/
+dist/
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.log
+
+# Local helper for one-off checks in the test container
+.devcmd
+
+# Never commit a Home Assistant's own data, secrets or keys
+.storage/
+*.db
+*.db-*
+.claude/
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+id_*
+*_deploy
+*_deploy.pub
+.keys/
+secrets.yaml
+
+# Archives and editor folders
+*.zip
+*.tgz
+.vscode/
+.idea/
+.DS_Store

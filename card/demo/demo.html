@@ -1,0 +1,464 @@
+<meta charset="utf-8">
+<title>VitalRings Card Demo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+  /* Layout: a short intro and two controls, then a grid of mock dashboards, each showing the card in a different theme or width. */
+  :root {
+    --bg: #f3f2f8;
+    --fg: #1d1a2b;
+    --muted: #625d78;
+    --line: #d9d6e6;
+    --accent: #5b55d6;
+    --control: #ffffff;
+    --font-display: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14121d; --fg: #eceaf6; --muted: #a29dba; --line: #322e45; --accent: #a59fff; --control: #1f1c2c;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14121d; --fg: #eceaf6; --muted: #a29dba; --line: #322e45; --accent: #a59fff; --control: #1f1c2c;
+    color-scheme: dark;
+  }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.5;
+    padding-block: 28px 48px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+  h1 { font-family: var(--font-display); font-size: 26px; font-weight: 600; margin: 0; text-wrap: balance; }
+  .lede { margin: 6px 0 0; color: var(--muted); max-width: 65ch; }
+  .controls { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: end; }
+  .control { display: flex; flex-direction: column; gap: 5px; }
+  .control > span { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  .seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; background: var(--control); }
+  .seg button {
+    font: inherit; font-size: 13px; padding: 7px 12px; border: 0; background: none; color: var(--fg); cursor: pointer;
+  }
+  .seg button + button { border-left: 1px solid var(--line); }
+  .seg button[aria-pressed="true"] { background: var(--accent); color: var(--bg); font-weight: 600; }
+  .seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr)); gap: 18px; align-items: start; }
+  figure { margin: 0; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+  figcaption { font-size: 13px; color: var(--muted); }
+  figcaption b { color: var(--fg); font-weight: 600; }
+  /* Each frame imitates a Home Assistant dashboard in one theme; these colours are fixed on purpose. */
+  .frame { padding: 14px; border-radius: 14px; border: 1px solid var(--line); }
+  .frame[data-ha="light"] {
+    background: #f1f1f4; --ha-card-background: #ffffff; --primary-text-color: #1c1c1e;
+    --secondary-text-color: #6b6b70; --divider-color: rgba(0, 0, 0, 0.12);
+  }
+  .frame[data-ha="dark"] {
+    background: #111113; --ha-card-background: #1c1c1e; --primary-text-color: #e6e6e8;
+    --secondary-text-color: #9b9ba1; --divider-color: rgba(255, 255, 255, 0.12);
+  }
+  .frame[data-ha="synth"] {
+    background: #0b0318; --ha-card-background: rgba(22, 8, 43, 0.94); --primary-text-color: #f1e8ff;
+    --secondary-text-color: #b9a6d6; --divider-color: #3b1c66;
+  }
+  .narrow { max-width: 300px; }
+  .wide { grid-column: 1 / -1; width: 100%; }
+  .wide .frame { overflow-x: auto; }
+  .note { font-size: 13px; color: var(--muted); max-width: 65ch; margin: 0; }
+  /* Showcase mode (demo.html?showcase): branded scenes used for the README images. */
+  #showcase { display: flex; flex-direction: column; gap: 40px; width: 1600px; }
+  .shot {
+    position: relative;
+    width: 1600px;
+    box-sizing: border-box;
+    padding: 64px 72px 72px;
+    overflow: hidden;
+    color: #f1e8ff;
+    background:
+      radial-gradient(circle at 12% -10%, rgba(164, 107, 255, 0.55) 0%, transparent 42%),
+      radial-gradient(circle at 96% 108%, rgba(255, 47, 214, 0.38) 0%, transparent 40%),
+      radial-gradient(circle at 70% -20%, rgba(77, 243, 255, 0.18) 0%, transparent 38%),
+      linear-gradient(165deg, #0b0318 0%, #170a2e 55%, #0b0318 100%);
+  }
+  /* A faint synthwave floor grid fading into the horizon */
+  .shot::after {
+    content: "";
+    position: absolute;
+    left: -20%;
+    right: -20%;
+    bottom: -40px;
+    height: 300px;
+    background:
+      repeating-linear-gradient(90deg, rgba(255, 47, 214, 0.22) 0 1px, transparent 1px 80px),
+      repeating-linear-gradient(0deg, rgba(255, 47, 214, 0.22) 0 1px, transparent 1px 44px);
+    transform: perspective(520px) rotateX(62deg);
+    transform-origin: bottom;
+    -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 85%);
+    mask-image: linear-gradient(to top, #000 0%, transparent 85%);
+    pointer-events: none;
+  }
+  .shot > * { position: relative; z-index: 1; }
+  .brand { display: flex; align-items: center; gap: 22px; }
+  .brand svg { width: 92px; height: 92px; filter: drop-shadow(0 0 18px rgba(255, 47, 214, 0.45)); }
+  .brand h2 { margin: 0; font-size: 58px; line-height: 1; font-weight: 800; letter-spacing: -0.02em; }
+  .brand h2 span {
+    background: linear-gradient(90deg, #ff2fd6, #a46bff 55%, #4df3ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .brand p { margin: 10px 0 0; font-size: 22px; color: #b9a6d6; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 26px 0 34px; }
+  .chips span {
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #f1e8ff;
+    border: 1px solid rgba(185, 166, 214, 0.35);
+    background: rgba(11, 3, 24, 0.45);
+  }
+  .glass {
+    padding: 18px;
+    border-radius: 26px;
+    border: 1px solid rgba(185, 166, 214, 0.28);
+    background: rgba(11, 3, 24, 0.5);
+    box-shadow: 0 40px 90px rgba(255, 47, 214, 0.22), 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+  .glass[data-ha="light"] { background: #f1f1f4; }
+  .glass[data-ha="dark"] { background: #111113; }
+  .shot h3 { margin: 0 0 14px; font-size: 20px; font-weight: 700; }
+  .shot h3 small { font-weight: 400; color: #b9a6d6; font-size: 16px; margin-left: 8px; }
+  .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; align-items: start; }
+  body.showcase { padding: 0; background: #05010c; }
+  .duo { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; align-items: start; }
+</style>
+
+<div id="showcase" hidden>
+  <section class="shot" id="hero">
+    <div class="brand">
+      <svg viewBox="0 0 96 96" aria-hidden="true">
+        <defs>
+          <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff2fd6"/><stop offset="1" stop-color="#a46bff"/></linearGradient>
+          <linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5df0a8"/><stop offset="1" stop-color="#4df3ff"/></linearGradient>
+          <linearGradient id="lg3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb224"/><stop offset="1" stop-color="#ff7a3d"/></linearGradient>
+          <linearGradient id="lg4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff5c8a"/><stop offset="1" stop-color="#ff2fd6"/></linearGradient>
+        </defs>
+        <g fill="none" stroke-width="7" stroke-linecap="round" transform="rotate(-90 48 48)">
+          <circle cx="48" cy="48" r="40" stroke="rgba(185,166,214,0.18)"/>
+          <circle cx="48" cy="48" r="30" stroke="rgba(185,166,214,0.18)"/>
+          <circle cx="48" cy="48" r="20" stroke="rgba(185,166,214,0.18)"/>
+          <circle cx="48" cy="48" r="40" stroke="url(#lg1)" stroke-dasharray="221 251.3"/>
+          <circle cx="48" cy="48" r="30" stroke="url(#lg2)" stroke-dasharray="139 188.5"/>
+          <circle cx="48" cy="48" r="20" stroke="url(#lg3)" stroke-dasharray="78 125.7"/>
+        </g>
+        <path fill="url(#lg4)" d="M48 57.5c-6.6-4.7-9.6-8-9.6-11.6 0-2.9 2.2-5 5-5 1.8 0 3.5.9 4.6 2.4 1.1-1.5 2.8-2.4 4.6-2.4 2.8 0 5 2.1 5 5 0 3.600-3 6.900-9.600 11.600z"/>
+      </svg>
+      <div>
+        <h2>Vital<span>Rings</span></h2>
+        <p>Heart, vitals and fitness rings for Home Assistant</p>
+      </div>
+    </div>
+    <div class="chips">
+      <span>Six scored rings</span><span>Heart rate chart</span><span>Real sleeping and awake averages</span><span>VO₂ max percentile</span><span>Weight trend</span>
+    </div>
+    <div class="glass frame" data-ha="synth" id="hero-card"></div>
+  </section>
+
+  <section class="shot" id="themes">
+    <div class="trio">
+      <div><h3>Synthwave <small>the default</small></h3><div class="glass frame" data-ha="synth" id="theme-synth"></div></div>
+      <div><h3>Theme <small>follows a light theme</small></h3><div class="glass frame" data-ha="light" id="theme-light"></div></div>
+      <div><h3>Health <small>on a dark theme</small></h3><div class="glass frame" data-ha="dark" id="theme-dark"></div></div>
+    </div>
+  </section>
+
+  <section class="shot" id="rings">
+    <div class="duo">
+      <div><h3>Every ring explains itself <small>hover or tap a row</small></h3><div class="glass frame" data-ha="synth" id="ring-info"></div></div>
+      <div><h3>An off day <small>the open rings show what is off</small></h3><div class="glass frame" data-ha="synth" id="ring-off"></div></div>
+    </div>
+  </section>
+</div>
+
+<div class="wrap">
+  <header>
+    <h1>VitalRings card</h1>
+    <p class="lede">The real card bundle with invented sample data; none of it is from a real person. Each frame is a mock Home Assistant dashboard in a different theme or width. Hover a chart for detail, use the small switches on each chart to change its period, and hover a ring's row for your usual range.</p>
+  </header>
+
+  <div class="controls">
+    <div class="control">
+      <span id="lbl-day">Sample day</span>
+      <div class="seg" role="group" aria-labelledby="lbl-day" id="scenario">
+        <button type="button" data-v="typical" aria-pressed="true">Typical</button>
+        <button type="button" data-v="off" aria-pressed="false">Off day</button>
+        <button type="button" data-v="stale" aria-pressed="false">Watch not worn</button>
+        <button type="button" data-v="empty" aria-pressed="false">No data</button>
+      </div>
+    </div>
+    <div class="control">
+      <span id="lbl-unit">Weight unit</span>
+      <div class="seg" role="group" aria-labelledby="lbl-unit" id="unit">
+        <button type="button" data-v="kg" aria-pressed="true">Kilograms</button>
+        <button type="button" data-v="lb" aria-pressed="false">Pounds</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <p class="note">Each ring is a score out of 100 against a published benchmark, so a full ring is always good news. Vitals: Heart (resting heart rate, lower is better), Recovery (heart rate variability, higher is better) and Breathing (respiratory rate, best at 12 to 18). Fitness: Sleeping heart rate, Blood oxygen and VO₂ max (your percentile for age and sex). The number in the middle is the mean of the three.</p>
+</div>
+
+<script type="module">
+/*BUNDLE*/
+</script>
+<script type="module">
+  // Stand-in for Home Assistant's <ha-card>.
+  if (!customElements.get("ha-card")) {
+    customElements.define("ha-card", class extends HTMLElement {
+      constructor() {
+        super();
+        this.attachShadow({ mode: "open" }).innerHTML =
+          "<style>:host{display:block;box-sizing:border-box;border-radius:12px;" +
+          "background:var(--ha-card-background,#fff);border:1px solid var(--ha-card-border-color,var(--divider-color,#ddd))}</style><slot></slot>";
+      }
+    });
+  }
+
+  // Deterministic sample data, invented for this page. None of it is from a real person.
+  const HOUR = 3600000;
+  const DAY = 24 * HOUR;
+  const ENTITY = "sensor.sample_sleeping_heart_rate";
+  const noise = (n) => {
+    const x = Math.sin(n * 12.9898) * 43758.5453;
+    return x - Math.floor(x) - 0.5;
+  };
+  const iso = (ms) => new Date(ms).toISOString().replace(/\.\d{3}Z$/, "+00:00");
+  const round = (v, d = 1) => Math.round(v * 10 ** d) / 10 ** d;
+
+  const SCENARIOS = {
+    typical: { sleeping: 46, resting: 48, awake: 66, previous: 64, hrv: 68, oxygen: 97, respiratory: 14.4, now: 61, syncedMin: 12, nowMin: 4 },
+    off: { sleeping: 53, resting: 55, awake: 74, previous: 67, hrv: 47, oxygen: 95, respiratory: 16.9, now: 78, syncedMin: 41, nowMin: 9 },
+    stale: { sleeping: 46, resting: 48, awake: 66, previous: 64, hrv: 68, oxygen: 97, respiratory: 14.4, now: 58, syncedMin: 60 * 19, nowMin: 60 * 20, old: true },
+  };
+
+  // Last night: asleep 23:15 to 06:50 (UTC, the demo's time zone), ending before "now".
+  function lastNight(now, daysBack = 0) {
+    let end = Math.floor(now / DAY) * DAY + 6 * HOUR + 50 * 60000;
+    if (end > now - HOUR) end -= DAY;
+    end -= daysBack * DAY;
+    return { start: end - (7 * 60 + 35) * 60000, end };
+  }
+
+  function heartHour(at, s, now) {
+    const hour = new Date(at).getUTCHours();
+    const day = Math.floor((now - at) / DAY);
+    const n = Math.floor(at / HOUR);
+    const asleep = hour >= 23 || hour < 7;
+    // The watch was on its charger for one evening.
+    if (day === 2 && hour >= 19 && hour <= 21) return null;
+    if (s.old && now - at < 20 * HOUR) return null;
+    let mean = asleep ? s.sleeping + noise(n) * 5 : s.awake + Math.sin(((hour - 7) / 16) * Math.PI) * 6 + noise(n) * 9;
+    let high = mean + (asleep ? 6 : 16) + Math.abs(noise(n + 7)) * 14;
+    let low = mean - (asleep ? 4 : 8) - Math.abs(noise(n + 3)) * 5;
+    if (hour === 23 || hour === 6) mean += 6; // dozing off, waking up
+    if (!asleep && hour === 17 && day % 2 === 1) { mean = 121 + noise(n) * 8; high = 164 + noise(n) * 6; low = 84; } // a run
+    return { start: at, end: at + HOUR, mean: round(mean), min: round(low), max: round(high) };
+  }
+
+  const weightAt = (t, now) => 80.2 + 4.6 * Math.min(1.25, Math.max(0, (now - t) / (210 * DAY))) + 0.45 * Math.sin(t / DAY / 9);
+  const vo2At = (t, now) => 44.3 - 2.6 * Math.min(1, Math.max(0, (now - t) / (300 * DAY))) + 0.3 * Math.sin(t / DAY / 17);
+
+  function series(message, s, now) {
+    const start = Date.parse(message.start);
+    const points = [];
+    if (!s) return { metric: message.metric, period: message.period, points };
+    if (message.metric === "heart_rate") {
+      for (let at = Math.ceil(start / HOUR) * HOUR; at + HOUR <= now; at += HOUR) {
+        const point = heartHour(at, s, now);
+        if (point) points.push(point);
+      }
+      return { metric: message.metric, period: "hour", points };
+    }
+    const step = { day: DAY, week: 7 * DAY, month: 30.44 * DAY }[message.period] ?? DAY;
+    // Weight goes back about two and a half years, VO2 max to when the sample watch was new.
+    const earliest = now - (message.metric === "weight" ? 900 : 410) * DAY;
+    for (let at = Math.max(Math.ceil(start / step) * step, earliest); at < now; at += step) {
+      const n = Math.floor(at / DAY);
+      // Not every day has a weigh-in or a workout that estimates VO2 max.
+      if (message.period === "day" && noise(n * 3) < (message.metric === "weight" ? -0.1 : 0.15)) continue;
+      const mid = Math.min(now, at + step / 2);
+      const value = message.metric === "weight" ? weightAt(mid, now) + noise(n) * 0.5 : vo2At(mid, now) + noise(n) * 0.3;
+      points.push({ start: at, end: at + step, mean: round(value, 2), min: round(value - 0.3, 2), max: round(value + 0.3, 2) });
+    }
+    return { metric: message.metric, period: message.period, points };
+  }
+
+  function summary(s, now) {
+    const night = lastNight(now, s.old ? 1 : 0);
+    const weight = round(weightAt(now, now), 1);
+    const usual = (average, spread, extra = {}) => ({
+      average, average_7d: average, low: round(average - spread), high: round(average + spread), days: 30, window_days: 30, ...extra,
+    });
+    const metrics = {
+      heart_rate: { value: s.now, measured_at: iso(now - s.nowMin * 60000) },
+      sleeping_heart_rate: {
+        value: s.sleeping, lowest: s.sleeping - 5, highest: s.sleeping + 9, hours: 6,
+        night: new Date(night.end).toISOString().slice(0, 10), start: iso(night.start), end: iso(night.end),
+      },
+      awake_heart_rate_previous: { value: s.previous, lowest: 52, highest: 164, hours: 15, start: iso(night.start - 16 * HOUR), end: iso(night.start) },
+      resting_heart_rate: { value: s.resting, ...usual(48.2, 2.1) },
+      heart_rate_variability: { value: s.hrv, ...usual(67.5, 6) },
+      workout_heart_rate: {
+        value: 138, max: 164, min: 84, workout: "running",
+        start: iso(Math.floor((now - DAY) / DAY) * DAY + 17 * HOUR + 5 * 60000),
+        end: iso(Math.floor((now - DAY) / DAY) * DAY + 17 * HOUR + 47 * 60000), duration_minutes: 42,
+      },
+      vo2_max: { value: 44.2, ...usual(43.8, 0.7, { days: 22, window_days: 90 }) },
+      oxygen_saturation: { value: s.oxygen, ...usual(96.8, 1) },
+      respiratory_rate: { value: s.respiratory, ...usual(14.5, 0.7) },
+      weight: { value: weight, ...usual(round(weight + 0.4), 0.6, { first: round(weightAt(now - 30 * DAY, now), 1), days: 17 }) },
+      height: { value: 1.79 },
+      bmi: { value: round(weight / (1.79 * 1.79), 1), category: "overweight" },
+    };
+    if (!s.old) metrics.awake_heart_rate = { value: s.awake, lowest: 54, highest: 112, hours: 5, since: iso(night.end) };
+    // Stand-in for the integration's benchmark scores (same lines as scores.py; a man of 45).
+    const line = (points, v) => {
+      if (v <= points[0][0]) return points[0][1];
+      for (let i = 1; i < points.length; i++) {
+        const [x0, y0] = points[i - 1], [x1, y1] = points[i];
+        if (v <= x1) return y0 + ((y1 - y0) * (v - x0)) / (x1 - x0);
+      }
+      return points[points.length - 1][1];
+    };
+    const vo2Row = [24.2, 26.8, 31.9, 37.8, 45.0, 52.1, 55.6];
+    const vo2Points = [[21.6, 0], [24.2, 5], [26.8, 10], [31.9, 25], [37.8, 50], [45.0, 75], [52.1, 90], [55.6, 100]];
+    const scored = {
+      resting_heart_rate: [line([[50, 100], [100, 0]], s.resting), { direction: "low", low: 50, high: null }],
+      heart_rate_variability: [Math.min(100, Math.max(0, (Math.log(s.hrv / 15) / Math.log(100 / 15)) * 100)), { direction: "high", low: null, high: 100 }],
+      respiratory_rate: [line([[6, 0], [12, 100], [18, 100], [28, 0]], s.respiratory), { direction: "range", low: 12, high: 18 }],
+      sleeping_heart_rate: [line([[45, 100], [85, 0]], s.sleeping), { direction: "low", low: 45, high: null }],
+      oxygen_saturation: [line([[90, 0], [95, 85], [97, 100]], s.oxygen), { direction: "high", low: null, high: 97 }],
+      vo2_max: [line(vo2Points, 44.2), { direction: "high", low: null, high: vo2Row[6] }],
+    };
+    for (const [key, [value, full]] of Object.entries(scored)) Object.assign(metrics[key], { score: Math.round(value), full });
+    metrics.vo2_max.percentile = Math.round(line(vo2Points.slice(1, 7).concat([[55.6, 95]]), 44.2));
+    const mean = (keys) => Math.round(keys.reduce((sum, key) => sum + scored[key][0], 0) / keys.length);
+    metrics.vitals_score = { value: mean(["resting_heart_rate", "heart_rate_variability", "respiratory_rate"]), rings: 3 };
+    metrics.fitness_score = { value: mean(["sleeping_heart_rate", "oxygen_saturation", "vo2_max"]), rings: 3 };
+    return { updated: iso(now), synced: iso(now - s.syncedMin * 60000), metrics };
+  }
+
+  function makeHass(name) {
+    const s = SCENARIOS[name];
+    const callWS = async (message) => {
+      const now = Date.now();
+      if (message.type === "vital_rings/summary") {
+        return s ? summary(s, now) : { updated: iso(now), synced: null, metrics: {} };
+      }
+      if (message.type === "vital_rings/series") return series(message, s, now);
+      throw { code: "unknown_command" };
+    };
+    return {
+      // A new state object each time, as Home Assistant does when a sensor changes.
+      states: { [ENTITY]: { entity_id: ENTITY, state: s ? String(s.sleeping) : "unknown", attributes: {} } },
+      entities: { [ENTITY]: { platform: "vital_rings" } },
+      locale: { language: "en-GB" },
+      config: { time_zone: "UTC", unit_system: { mass: "kg" } },
+      callWS,
+    };
+  }
+
+  const FRAMES = [
+    { ha: "synth", title: "Synthwave (default)", sub: "one column", preset: "synthwave" },
+    { ha: "light", title: "Theme preset", sub: "follows a light theme", preset: "theme" },
+    { ha: "dark", title: "Theme preset", sub: "follows a dark theme", preset: "theme" },
+    { ha: "synth", title: "Two columns wide", sub: "about 760 px", preset: "synthwave", wide: 760 },
+    { ha: "synth", title: "Three columns wide", sub: "about 1100 px (needs a wide screen)", preset: "synthwave", wide: 1120 },
+    { ha: "light", title: "Two columns wide", sub: "theme preset, light", preset: "theme", wide: 760 },
+    { ha: "synth", title: "Narrow column", sub: "300 px, rings above their rows", preset: "synthwave", narrow: true },
+    { ha: "dark", title: "Health preset", sub: "Apple-like colours on a dark theme", preset: "health" },
+    { ha: "synth", title: "Rings and rows only", sub: "the charts switched off", preset: "synthwave", compact: true },
+  ];
+
+  const grid = document.getElementById("grid");
+  const cards = FRAMES.map((f) => {
+    const figure = document.createElement("figure");
+    if (f.narrow) figure.className = "narrow";
+    if (f.wide) {
+      figure.className = "wide";
+      figure.style.maxWidth = f.wide + "px";
+    }
+    const caption = document.createElement("figcaption");
+    const strong = document.createElement("b");
+    strong.textContent = f.title;
+    caption.append(strong, " · " + f.sub);
+    const frame = document.createElement("div");
+    frame.className = "frame";
+    frame.dataset.ha = f.ha;
+    const card = document.createElement("vital-rings-card");
+    frame.append(card);
+    figure.append(caption, frame);
+    grid.append(figure);
+    return { card, f };
+  });
+
+  const state = { scenario: "typical", unit: "kg" };
+  function apply() {
+    const hass = makeHass(state.scenario);
+    for (const { card, f } of cards) {
+      card.setConfig({
+        type: "custom:vital-rings-card",
+        entity: ENTITY,
+        preset: f.preset,
+        weight_unit: state.unit,
+        show_heart: !f.compact,
+        show_vitals: !f.compact,
+        show_body: !f.compact,
+      });
+      card.hass = hass;
+    }
+  }
+  for (const id of ["scenario", "unit"]) {
+    document.getElementById(id).addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (!button) return;
+      state[id] = button.dataset.v;
+      for (const b of event.currentTarget.querySelectorAll("button")) {
+        b.setAttribute("aria-pressed", String(b === button));
+      }
+      apply();
+    });
+  }
+  apply();
+
+  // Showcase mode: the branded scenes the README images are taken from.
+  if (new URLSearchParams(location.search).has("showcase")) {
+    document.body.classList.add("showcase");
+    document.querySelector(".wrap").hidden = true;
+    document.getElementById("showcase").hidden = false;
+    const place = (id, config, scenario = "typical") => {
+      const card = document.createElement("vital-rings-card");
+      card.setConfig({ type: "custom:vital-rings-card", entity: ENTITY, ...config });
+      card.hass = makeHass(scenario);
+      document.getElementById(id).append(card);
+      return card;
+    };
+    place("hero-card", { preset: "synthwave" });
+    place("theme-synth", { preset: "synthwave", show_heart: false, show_vitals: false });
+    place("theme-light", { preset: "theme", show_heart: false, show_vitals: false });
+    place("theme-dark", { preset: "health", show_heart: false, show_vitals: false });
+    const charts = { show_heart: false, show_vitals: false, show_body: false };
+    const explained = place("ring-info", { preset: "synthwave", ...charts });
+    place("ring-off", { preset: "synthwave", ...charts }, "off");
+    // Open one information box, as a visitor would by hovering the row.
+    explained.updateComplete.then(() =>
+      setTimeout(() => explained.shadowRoot.querySelector(".row.c-breathing")?.dispatchEvent(new PointerEvent("pointerenter")), 600),
+    );
+  }
+</script>
