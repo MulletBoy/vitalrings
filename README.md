@@ -93,14 +93,17 @@ More may follow.
 
 [![Open this repository in Home Assistant.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=MulletBoy&repository=vitalrings&category=integration)
 
-1. Open **Settings > Marketplace**, choose **Add from link** and paste
-   `https://github.com/MulletBoy/vitalrings` (type: Integration). On Home Assistant versions before
-   2026.11 with HACS: **HACS > Custom repositories**.
+1. Open **Settings > Marketplace** and search for **VitalRings**. On Home Assistant versions before
+   2026.11 with HACS: search for it in **HACS**.
 2. Download **VitalRings** and restart Home Assistant.
 3. Go to **Settings > Devices & services > Add integration > VitalRings**.
 4. Choose whose health data to use (your Life Dashboard entry) and, optionally, your year of birth
    and sex. Those two are used only to pick the VO2 max benchmark.
 5. Add the **Vital Rings** card to a dashboard and pick any VitalRings entity.
+
+If the search does not find VitalRings, add it as a custom repository: in Marketplace choose
+**Add from link** and paste `https://github.com/MulletBoy/vitalrings` (type: Integration); in HACS
+use **Custom repositories**. Then carry on with step 2.
 
 Manual install: copy `custom_components/vital_rings` into your `config/custom_components` folder
 and restart.
